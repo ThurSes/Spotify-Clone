@@ -1,11 +1,11 @@
 import { MongoClient } from "mongodb";
 
-const URI =
-  "mongodb+srv://arthurcurciocampos:*08022010*@cluster0.xullczh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const URI = process.env.MONGODB_URI;
 
-const client = new MongoClient(URI);
+if (!URI) {
+  throw new Error("Defina MONGODB_URI no arquivo Back-end/.env.");
+}
 
-export const db = client.db("spotifyAula");
-const songCollection = await db.collection("songs").find({}).toArray();
+const client = new MongoClient(URI, { serverSelectionTimeoutMS: 10_000 });
 
-console.log(songCollection);
+export const db = client.db(process.env.MONGODB_DB_NAME || "spotifyAula");
